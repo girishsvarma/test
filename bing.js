@@ -65,8 +65,8 @@ exports.findDealersForZipCode = async function(zip, returnValues){
   
  
 
-  //returnString += geocodeResults;
-  //returnString += "\n-----------------------------------------------------------\n";
+  returnString += geocodeResults;
+  returnString += "\n-----------------------------------------------------------\n";
 
  
 
