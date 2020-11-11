@@ -10,17 +10,14 @@ const port = 8080;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', async (req, res) => {
+app.get('/:zip', async (req, res) => {
     
-    let zip = '53081'; //req.query.zip;
-    let result = await Promise.all(bing.findDealersForZipCode(zip,"")).then( (result)=> {
-      console.log("result=" + result);
-      res.send(result);
-    });
+    let zip = req.params.zip;
+    let result = await Promise.all([bing.findDealersForZipCode(zip,"",res)]);
     
     
     
     
 });
 
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
+app.listen(port, () => console.log(`Use Url http://localhost:${port}/<<zipcode>> to access!`));
