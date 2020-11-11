@@ -1,6 +1,6 @@
 var https = require('https');
 //const { search } = require('./app');
-var BingMapsKey = "key";
+var BingMapsKey = "AiYyO-KTYuE8ekwdyOr1RfnCMMJnF1dtznXh_61aUCJL4Pj1cSEx5RpkHaKtZZNJ";
 var map = null;
 var directionsX = 43.739793598651886;
 var directionsY = 87.77999930083752;
@@ -33,47 +33,9 @@ exports.test = function(){
    // MakeServiceRequest(request);
 }
 
-exports.findDealersForZipCode = async function(zip, returnValues){
-
- 
-
-  // Get geolocation for the zip code
+exports.findDealersForZipCode = async function(zip, returnValues,resp){
   let returnString = "";
-  //let geocodeResults = "";
-  //await Promise.all(geocodeResults = geocodeSearch(zip,returnValues));
-  
-  
-    
-  let response = await Promise.all(async (zip,returnValues) => {
-    
-     try{
-       
-     let geocodeResults = await geocodeSearch(zip,returnValues)
-      let responseJson = await geocodeResults.json()
-
-      console.log(responseJson)
-      return responseJson;
-    } catch (err) {
-      console.log(err)
-    }
-  }
-    
-  
-  )
-      
-  
-  
- 
-
-  returnString += geocodeResults;
-  returnString += "\n-----------------------------------------------------------\n";
-
- 
-
-
-
- 
-
+  let response = await Promise.all([geocodeSearch(zip,returnValues,resp)]);
 }
 
 const testFunc = () => {
@@ -82,11 +44,9 @@ const testFunc = () => {
     })
 }
 
-async function geocodeSearch(zip,returnValues){
-
+async function geocodeSearch(zip,returnValues,res){ 
+let geocodeSearchResponse ="";
  
-
-  console.log('Return Values =' + returnValues);
   let options = {
     host: 'dev.virtualearth.net',
     path: '/REST/v1//Locations/?key='+BingMapsKey+'&o=json&query='+zip+'&includeNeighborhood=1&include=queryParse&maxResults='+maxResults+'&_=1598986177293',
@@ -96,13 +56,12 @@ async function geocodeSearch(zip,returnValues){
   }
   
       let callback = (resp)=> {
-      console.log('inside callback');
       let data = '';
       
       // A chunk of data has been received.
       resp.on('data', (chunk) => {
         data += chunk;
-        console.log(data);
+       
       });
     
       // The whole response has been received. 
@@ -110,11 +69,8 @@ async function geocodeSearch(zip,returnValues){
 
  
 
-        console.log(data);
-
- 
-
-        return data;
+        res.json(data);
+       // return data;
         
       });
 
@@ -128,5 +84,6 @@ async function geocodeSearch(zip,returnValues){
 
  
 
-  https.request(options, callback ).end();
+ await https.request(options, callback ).end();
+ return  geocodeSearchResponse;
 }
